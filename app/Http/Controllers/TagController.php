@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
@@ -11,15 +12,17 @@ class TagController extends Controller
      */
     public function index()
     {
-        //
+        $tags = Tag::latest()->get();
+        return view('tags.index', compact('tags'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return view('tags.create');
     }
 
     /**
@@ -27,7 +30,13 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $formFields = $request->validate([
+            'name' => ['required' , 'string' , 'max:255']
+        ]);
+
+        Tag::create($formFields);
+
+        return redirect('/tags/index')->with(['notification_title' => 'Tag', 'success_message' => 'Tag Created successfully!']);
     }
 
     /**
@@ -41,24 +50,31 @@ class TagController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Tag $tag)
     {
-        //
+        return view('tags.edit', compact('tag'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Tag $tag)
     {
-        //
+        $formFields = $request->validate([
+            'name' => ['required' , 'string' , 'max:255']
+        ]);
+
+        $tag->update($formFields);
+
+        return back()->with(['notification_title' => 'Tag update', 'success_message' => 'Tag updated successfully!']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Tag $tag)
     {
-        //
+        $tag->delete();
+        return redirect('/tags/index')->with(['notification_title' => 'Deleting', 'success_message' => 'Tag has been deleted']);
     }
 }

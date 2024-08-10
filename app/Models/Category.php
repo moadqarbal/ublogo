@@ -16,4 +16,6 @@ class Category extends Model
     {
         return $this->belongsToMany(Blogpost::class, 'blogpost_category');
     }
+
+    
 }

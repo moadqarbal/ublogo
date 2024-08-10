@@ -16,6 +16,7 @@ class Blogpost extends Model
     protected $fillable = [
         'user_id', 
         'title', 
+        'slug',
         'content', 
         'categories', 
         'tags', 

@@ -1,6 +1,6 @@
 <nav class="navbar py-5 navbar-expand-lg u-top-nav">
     <div class="container">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img src="{{ asset('images/logo-ublogo.png') }} " style="height: 45px;" alt="Logo Alt">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,16 +43,16 @@
               <a class="nav-link fs-5" href="{{ url('users/' . auth()->user()->id . '/edit') }}"><i class="bi bi-person-fill"></i> {{ auth()->user()->username }}</a>
             </li>
             <li class="nav-item">
-              <a class="btn fs-5 border border-0 rounded-1 p-2" style="background-color: #272727; color: rgb(255, 255, 255);" href="logout">
+              <a class="btn fs-5 border border-0 rounded-1 p-2" style="background-color: #272727; color: rgb(255, 255, 255);" href="{{ url('logout') }}">
                 Sign Out
               </a>
             </li>
           @else
             <li class="nav-item">
-              <a class="nav-link fs-5" href="signin">Sign In</a>
+              <a class="nav-link fs-5" href="/signin">Sign In</a>
             </li>
             <li class="nav-item">
-              <a class="btn fs-5 border border-0 rounded-1 p-2" style="background-color: #FF7C00; color: white;" href="signup">
+              <a class="btn fs-5 border border-0 rounded-1 p-2" style="background-color: #FF7C00; color: white;" href="/signup">
                 Sign Up
               </a>
             </li>

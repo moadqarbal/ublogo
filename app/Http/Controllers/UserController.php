@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserController extends Controller
 {
@@ -137,16 +140,50 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        if ($user->id != auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        $formFields = $request->validate([
+            'firstname' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'profile_image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif', 'max:2048']
+        ]);
+
+        if ($request->hasFile('profile_image')) {
+            // Delete the old profile image if it exists
+            if ($user->profile_image) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+
+            // Store the new image
+            $formFields['profile_image'] = $request->file('profile_image')->store('profile_images', 'public');
+        }
+
+        // Update user with the new fields
+        $user->update($formFields);
+
+        return back()->with(['notification_title' => 'Updating', 'success_message' => 'User info updated.']);
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        if($user->user_id != auth()->id()){
+            abort(403, 'Unauthorized');
+        }
+
+        if($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+            Storage::disk('public')->delete($user->profile_image);
+        }
+        
+        $user->delete();
+        return redirect('/')->with(['notification_title' => 'Deleting', 'success_message' => 'Your account has been deleted. We hope to see you again soon!']);
     }
 }

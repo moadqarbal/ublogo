@@ -22,6 +22,8 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    
+
 
     /**
      * The attributes that are mass assignable.
@@ -36,6 +38,7 @@ class User extends Authenticatable
         'lastname',
         'username',
         'website',
+        'profile_image',
     ];
 
     /**
